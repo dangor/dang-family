@@ -6,7 +6,7 @@ import './index.css'
 import {createStore} from 'redux'
 import reducers from './reducers'
 
-let store = createStore()
+let store = createStore(reducers)
 
 ReactDOM.render(
   <Router history={browserHistory} routes={routes} />,

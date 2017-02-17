@@ -1,12 +1,12 @@
 import React from 'react'
 import * as firebase from 'firebase'
 
-const config = {
-  apiKey: "AIzaSyDkpSu8HJeeCuDlwWHNq8UZ2nd8x16VPUM",
-  authDomain: "dang-family.firebaseapp.com",
-  databaseURL: "https://dang-family.firebaseio.com",
-  storageBucket: "dang-family.appspot.com",
-  messagingSenderId: "984409480314"
+var config = {
+  apiKey: "AIzaSyDm6oo3m3nRmO0LF1-g2poVg2peWb0LO4o",
+  authDomain: "dang-house.firebaseapp.com",
+  databaseURL: "https://dang-house.firebaseio.com",
+  storageBucket: "dang-house.appspot.com",
+  messagingSenderId: "487443983747"
 }
 
 export default class Firebase extends React.Component {

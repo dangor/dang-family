@@ -3,6 +3,7 @@ import AuthCallback from './components/AuthCallback'
 import Authenticated from './components/Authenticated'
 import Home from './components/Home'
 import Login from './components/Login'
+import PageNotFound from './components/PageNotFound'
 import ViewRouter from './components/ViewRouter'
 
 const routes = {
@@ -21,6 +22,9 @@ const routes = {
       path: 'view/:key',
       component: ViewRouter
     }]
+  }, {
+    path: '*',
+    component: PageNotFound
   }]
 }
 
