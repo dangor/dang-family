@@ -26,16 +26,20 @@ class Firebase extends React.Component {
       }
     })
 
-    const buttons = firebase.database().ref('buttons')
-    buttons.on('child_added', data => {
-      const button = {
-        key: data.key,
-        label: data.val().label
-      }
-      this.props.updateFirebaseState({buttons: buttons => concat(buttons || [], button)})
-    })
-    buttons.on('child_removed', data => {
-      this.props.updateFirebaseState({buttons: buttons => filter(buttons, ({key}) => key !== data.key)})
+    const refPaths = ['buttons', 'tablets']
+    refPaths.forEach(refPath => {
+      const ref = firebase.database().ref(refPath)
+      ref.on('child_added', data => {
+        const blob = {
+          key: data.key,
+          label: data.val().label,
+          props: data.val().props
+        }
+        this.props.updateFirebaseState({[refPath]: list => concat(list || [], blob)})
+      })
+      ref.on('child_removed', data => {
+        this.props.updateFirebaseState({[refPath]: list => filter(list, ({key}) => key !== data.key)})
+      })
     })
   }
 

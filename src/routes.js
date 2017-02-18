@@ -1,6 +1,5 @@
 import Admin from './components/admin'
 import App from './App'
-import AuthCallback from './components/AuthCallback'
 import Authenticated from './components/Authenticated'
 import Home from './components/Home'
 import Login from './components/Login'
@@ -14,9 +13,6 @@ const routes = {
   childRoutes: [{
     path: 'login',
     component: Login
-  }, {
-    path: 'authCallback',
-    component: AuthCallback
   }, {
     component: Authenticated,
     childRoutes: [{

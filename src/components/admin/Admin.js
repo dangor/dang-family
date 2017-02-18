@@ -1,6 +1,7 @@
 import React from 'react'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import Buttons from './Buttons'
+import Tablets from './Tablets'
 
 export default class Admin extends React.Component {
   render () {
@@ -9,10 +10,10 @@ export default class Admin extends React.Component {
         <h2>Admin</h2>
         <Tabs>
           <Tab label='Buttons'>
-            <Buttons/>
+            <Buttons />
           </Tab>
           <Tab label='Tablets'>
-            Tablets
+            <Tablets />
           </Tab>
           <Tab label='Lists'>
             Lists
