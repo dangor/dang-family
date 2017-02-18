@@ -1,4 +1,4 @@
-import Admin from './components/Admin'
+import Admin from './components/admin'
 import App from './App'
 import AuthCallback from './components/AuthCallback'
 import Authenticated from './components/Authenticated'

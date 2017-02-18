@@ -5,7 +5,7 @@ import {trim, some} from 'lodash'
 import {Divider, List, ListItem, IconButton, TextField, RaisedButton} from 'material-ui'
 import NavigationClose from 'material-ui/svg-icons/navigation/close'
 
-class Admin extends React.Component {
+class Buttons extends React.Component {
   state = {
     label: ''
   }
@@ -60,10 +60,10 @@ class Admin extends React.Component {
   }
 }
 
-Admin.propTypes = {
+Buttons.propTypes = {
   buttons: PropTypes.array
 }
 
 export default connect(
-  Admin.mapStateToProps
-)(Admin)
+  Buttons.mapStateToProps
+)(Buttons)
