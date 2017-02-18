@@ -1,9 +1,8 @@
-import React, {PropTypes} from 'react'
-import {connect} from 'react-redux'
+import React from 'react'
 import * as firebase from 'firebase'
 import {browserHistory} from 'react-router'
 
-var config = {
+const config = {
   apiKey: "AIzaSyDm6oo3m3nRmO0LF1-g2poVg2peWb0LO4o",
   authDomain: "dang-house.firebaseapp.com",
   databaseURL: "https://dang-house.firebaseio.com",

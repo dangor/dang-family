@@ -1,5 +1,6 @@
 import React from 'react'
 import * as firebase from 'firebase'
+import {RaisedButton} from 'material-ui'
 
 export default class Login extends React.Component {
   _signIn = () => {
@@ -12,9 +13,11 @@ export default class Login extends React.Component {
 
   render () {
     return (
-      <button onClick={this._signIn}>
-        Sign in
-      </button>
+      <RaisedButton
+        primary
+        onClick={this._signIn}
+        label='Sign in'
+      />
     )
   }
 }
