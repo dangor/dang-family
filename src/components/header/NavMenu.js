@@ -1,10 +1,15 @@
 import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
-import {IconButton, IconMenu, MenuItem} from 'material-ui'
+import {Divider, IconButton, IconMenu, MenuItem} from 'material-ui'
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu'
 import {browserHistory} from 'react-router'
+import * as firebase from 'firebase'
 
 class NavMenu extends React.Component {
+  _signOut = () => {
+    firebase.auth().signOut()
+  }
+
   render () {
     return (
       <IconMenu
@@ -12,10 +17,6 @@ class NavMenu extends React.Component {
         anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
         targetOrigin={{horizontal: 'left', vertical: 'top'}}
       >
-        <MenuItem
-          primaryText="Admin"
-          onClick={() => browserHistory.push('/admin')}
-        />
         {this.props.tablets.map(tablet => (
           <MenuItem
             key={tablet.key}
@@ -23,6 +24,16 @@ class NavMenu extends React.Component {
             onClick={() => browserHistory.push('/view/' + tablet.key)}
           />
         ))}
+        <Divider />
+        <MenuItem
+          primaryText='Admin'
+          onClick={() => browserHistory.push('/admin')}
+        />
+        <Divider />
+        <MenuItem
+          primaryText='Logout'
+          onClick={this._signOut}
+        />
       </IconMenu>
     )
   }

@@ -4,7 +4,7 @@ import Authenticated from './components/Authenticated'
 import Home from './components/Home'
 import Login from './components/Login'
 import PageNotFound from './components/PageNotFound'
-import ViewRouter from './components/ViewRouter'
+import TabletView from './components/TabletView'
 
 const routes = {
   path: '/',
@@ -23,7 +23,7 @@ const routes = {
       component: Admin
     }, {
       path: 'view/:key',
-      component: ViewRouter
+      component: TabletView
     }]
   }, {
     path: '*',
