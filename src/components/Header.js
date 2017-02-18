@@ -7,7 +7,7 @@ export default class Header extends React.Component {
   _renderNavMenu = () => {
     return (
       <IconMenu
-        iconButtonElement={<IconButton><NavigationMenu/></IconButton>}
+        iconButtonElement={<IconButton><NavigationMenu color='white' /></IconButton>}
         anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
         targetOrigin={{horizontal: 'left', vertical: 'top'}}
       >
