@@ -9,7 +9,7 @@ import ViewRouter from './components/ViewRouter'
 const routes = {
   path: '/',
   component: App,
-  indexRoute: {component: Home},
+  indexRoute: {onEnter: (nextState, replace) => replace('/home')},
   childRoutes: [{
     path: 'login',
     component: Login
@@ -19,6 +19,9 @@ const routes = {
   }, {
     component: Authenticated,
     childRoutes: [{
+      path: 'home',
+      component: Home
+    }, {
       path: 'view/:key',
       component: ViewRouter
     }]
