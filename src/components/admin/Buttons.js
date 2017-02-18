@@ -2,8 +2,8 @@ import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
 import * as firebase from 'firebase'
 import {trim, some} from 'lodash'
-import {Divider, List, ListItem, IconButton, TextField, RaisedButton} from 'material-ui'
-import NavigationClose from 'material-ui/svg-icons/navigation/close'
+import {TextField, RaisedButton} from 'material-ui'
+import DataList from './DataList'
 
 class Buttons extends React.Component {
   state = {
@@ -18,43 +18,30 @@ class Buttons extends React.Component {
 
   _addButton = () => {
     firebase.database().ref('buttons').push().set({label: trim(this.state.label)})
-  }
-
-  _removeButton = (key) => () => {
-    firebase.database().ref('buttons/' + key).remove()
+    this.setState({label: ''})
   }
 
   render () {
     return (
       <div>
-        <List>
-          {this.props.buttons.map(button => (
-            <div key={button.key}>
-              <Divider />
-              <ListItem
-                key={button.key}
-                primaryText={`${button.key}: ${button.label} (${button.momentPushed})`}
-                rightIconButton={
-                  <IconButton onClick={this._removeButton(button.key)}>
-                    <NavigationClose />
-                  </IconButton>
-                }
-                disabled
-              />
-            </div>
-          ))}
-          <Divider />
-        </List>
-        <TextField
-          hintText='Label'
-          value={this.state.label}
-          onChange={(e) => this.setState({label: e.target.value})}
+        <DataList
+          list={this.props.buttons}
+          refPath='buttons'
+          renderText={(data) => `${data.key}: ${data.label} (${data.momentPushed})`}
         />
-        <RaisedButton
-          label='Add'
-          onClick={this._addButton}
-          disabled={!trim(this.state.label) || some(this.props.buttons, ({label}) => label === trim(this.state.label))}
-        />
+        <form action='#'>
+          <TextField
+            hintText='Label'
+            value={this.state.label}
+            onChange={(e) => this.setState({label: e.target.value})}
+          />
+          <RaisedButton
+            type='submit'
+            label='Add'
+            onClick={this._addButton}
+            disabled={!trim(this.state.label) || some(this.props.buttons, ({label}) => label === trim(this.state.label))}
+          />
+        </form>
       </div>
     )
   }
