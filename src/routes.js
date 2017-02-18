@@ -1,3 +1,4 @@
+import Admin from './components/Admin'
 import App from './App'
 import AuthCallback from './components/AuthCallback'
 import Authenticated from './components/Authenticated'
@@ -21,6 +22,9 @@ const routes = {
     childRoutes: [{
       path: 'home',
       component: Home
+    }, {
+      path: 'admin',
+      component: Admin
     }, {
       path: 'view/:key',
       component: ViewRouter

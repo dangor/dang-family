@@ -12,6 +12,10 @@ export default class Header extends React.Component {
         targetOrigin={{horizontal: 'left', vertical: 'top'}}
       >
         <MenuItem
+          primaryText="Admin"
+          onClick={() => browserHistory.push('/admin')}
+        />
+        <MenuItem
           primaryText="1st Floor Hallway"
           onClick={() => browserHistory.push('/view/firstFloorHallway')}
         />

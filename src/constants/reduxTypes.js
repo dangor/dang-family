@@ -1,1 +1,1 @@
-export const SET_AUTH = 'SET_AUTH'
+export const UPDATE_FIREBASE_STATE = 'UPDATE_FIREBASE_STATE'
