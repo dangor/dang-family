@@ -5,7 +5,7 @@ import './styles/Authenticated.css'
 export default class Authenticated extends React.Component {
   render () {
     return (
-      <div>
+      <div className='root'>
         <Header />
         <div className='content'>
           {this.props.children}

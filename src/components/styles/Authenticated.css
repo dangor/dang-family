@@ -1,3 +1,10 @@
 .content {
-  margin: 2em;
+  padding: 2em;
+  overflow: auto;
+  height: calc(100% - 64px);
+  box-sizing: border-box;
+}
+
+.root {
+  height: 100%;
 }

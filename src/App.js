@@ -1,13 +1,20 @@
 import React, { Component } from 'react'
 import Firebase from './components/firebase'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 injectTapEventPlugin()
+
+const muiTheme = getMuiTheme({
+  button: {
+    height: 48
+  }
+})
 
 export default class App extends Component {
   render () {
     return (
-      <MuiThemeProvider>
+      <MuiThemeProvider muiTheme={muiTheme}>
         <div>
           <Firebase />
           {this.props.children}
