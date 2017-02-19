@@ -1,0 +1,9 @@
+.heading {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.buttonArea +.buttonArea {
+  margin-top: 1em;
+}

@@ -4,7 +4,7 @@ import Authenticated from './components/Authenticated'
 import Home from './components/Home'
 import Login from './components/Login'
 import PageNotFound from './components/PageNotFound'
-import TabletView from './components/TabletView'
+import TabletView from './components/tabletview'
 
 const routes = {
   path: '/',
