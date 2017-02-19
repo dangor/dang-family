@@ -1,13 +1,14 @@
 import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
 import {IconButton, IconMenu, MenuItem} from 'material-ui'
-import ContentAdd from 'material-ui/svg-icons/content/add'
+import ActionSettings from 'material-ui/svg-icons/action/settings'
+import {includes} from 'lodash'
 
 class ButtonMenu extends React.Component {
   render () {
     return (
       <IconMenu
-        iconButtonElement={<IconButton><ContentAdd /></IconButton>}
+        iconButtonElement={<IconButton><ActionSettings /></IconButton>}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
         targetOrigin={{horizontal: 'right', vertical: 'top'}}
       >
@@ -15,7 +16,9 @@ class ButtonMenu extends React.Component {
           <MenuItem
             key={button.key}
             primaryText={button.label}
-            onClick={this.props.addButton(button.key)}
+            onClick={this.props.buttonToggle(button.key)}
+            insetChildren
+            checked={includes(this.props.tabletButtons, button.key)}
           />
         ))}
       </IconMenu>
@@ -25,7 +28,8 @@ class ButtonMenu extends React.Component {
 
 ButtonMenu.propTypes = {
   buttons: PropTypes.array,
-  addButton: PropTypes.func
+  buttonToggle: PropTypes.func,
+  tabletButtons: PropTypes.array
 }
 
 export default connect(
