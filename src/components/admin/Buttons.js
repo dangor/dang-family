@@ -1,9 +1,10 @@
 import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
 import * as firebase from 'firebase'
-import {trim, some} from 'lodash'
+import {get, trim, some} from 'lodash'
 import {TextField, RaisedButton} from 'material-ui'
 import DataList from './DataList'
+import moment from 'moment'
 
 class Buttons extends React.Component {
   state = {
@@ -21,13 +22,22 @@ class Buttons extends React.Component {
     this.setState({label: ''})
   }
 
+  _dateString = (data) => {
+    const momentPushed = get(data, 'props.momentPushed')
+    if (!momentPushed) {
+      return '(Never pushed)'
+    }
+
+    return `(${moment(momentPushed).fromNow()})`
+  }
+
   render () {
     return (
       <div>
         <DataList
           list={this.props.buttons}
           refPath='buttons'
-          renderText={(data) => `${data.key}: ${data.label} (${data.momentPushed})`}
+          renderText={(data) => `${data.key}: ${data.label} ${this._dateString(data)}`}
         />
         <form action='#'>
           <TextField
