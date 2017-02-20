@@ -7,7 +7,11 @@ injectTapEventPlugin()
 
 const muiTheme = getMuiTheme({
   button: {
-    height: 48
+    height: 56
+  },
+  raisedButton: {
+    fontSize: 18,
+    fontWeight: 'bolder'
   }
 })
 
