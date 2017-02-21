@@ -16,7 +16,8 @@ export default function DataList (props) {
                 <NavigationClose />
               </IconButton>
             }
-            disabled
+            disabled={!props.onClick}
+            onClick={() => props.onClick && props.onClick(data.key)}
           />
         </div>
       ))}
@@ -28,5 +29,6 @@ export default function DataList (props) {
 DataList.propTypes = {
   list: PropTypes.array,
   renderText: PropTypes.func,
-  onRemove: PropTypes.func
+  onRemove: PropTypes.func,
+  onClick: PropTypes.func
 }

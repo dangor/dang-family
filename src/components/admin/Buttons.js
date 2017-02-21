@@ -3,13 +3,14 @@ import {connect} from 'react-redux'
 import * as firebase from 'firebase'
 import {chain, filter, get, trim, some} from 'lodash'
 import u from 'updeep'
-import {TextField, RaisedButton} from 'material-ui'
+import {Dialog, TextField, RaisedButton} from 'material-ui'
 import DataList from './DataList'
 import moment from 'moment'
 
 class Buttons extends React.Component {
   state = {
-    label: ''
+    label: '',
+    editKey: undefined
   }
 
   _addButton = () => {
@@ -41,6 +42,39 @@ class Buttons extends React.Component {
     return `(${moment(momentPushed).fromNow()})`
   }
 
+  _renderNewButtonForm = () => {
+    return (
+      <form action='#'>
+        <TextField
+          hintText='Label'
+          value={this.state.label}
+          onChange={(e) => this.setState({label: e.target.value})}
+        />
+        <RaisedButton
+          type='submit'
+          label='Add'
+          onClick={this._addButton}
+          disabled={!trim(this.state.label) || some(this.props.buttons, ({label}) => label === trim(this.state.label))}
+        />
+      </form>
+    )
+  }
+
+  _editButton = (key) => {
+    this.setState({editKey: key})
+  }
+
+  _renderEditButtonDialog = () => {
+    return (
+      <Dialog
+        open={!!this.state.editKey}
+        onRequestClose={() => this.setState({editKey: undefined})}
+      >
+        Edit form here
+      </Dialog>
+    )
+  }
+
   render () {
     return (
       <div>
@@ -48,20 +82,10 @@ class Buttons extends React.Component {
           list={this.props.buttons}
           onRemove={this._removeButton}
           renderText={(data) => `${data.key}: ${data.label} ${this._dateString(data)}`}
+          onClick={this._editButton}
         />
-        <form action='#'>
-          <TextField
-            hintText='Label'
-            value={this.state.label}
-            onChange={(e) => this.setState({label: e.target.value})}
-          />
-          <RaisedButton
-            type='submit'
-            label='Add'
-            onClick={this._addButton}
-            disabled={!trim(this.state.label) || some(this.props.buttons, ({label}) => label === trim(this.state.label))}
-          />
-        </form>
+        {this._renderNewButtonForm()}
+        {this._renderEditButtonDialog()}
       </div>
     )
   }
