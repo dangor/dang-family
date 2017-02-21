@@ -1,11 +1,6 @@
 import React, {PropTypes} from 'react'
-import * as firebase from 'firebase'
 import {Divider, List, ListItem, IconButton} from 'material-ui'
 import NavigationClose from 'material-ui/svg-icons/navigation/close'
-
-const removeData = (refPath, key) => () => {
-  firebase.database().ref(refPath + '/' + key).remove()
-}
 
 export default function DataList (props) {
   return (
@@ -17,7 +12,7 @@ export default function DataList (props) {
             key={data.key}
             primaryText={props.renderText(data)}
             rightIconButton={
-              <IconButton onClick={removeData(props.refPath, data.key)}>
+              <IconButton onClick={() => props.onRemove(data.key)}>
                 <NavigationClose />
               </IconButton>
             }
@@ -33,5 +28,5 @@ export default function DataList (props) {
 DataList.propTypes = {
   list: PropTypes.array,
   renderText: PropTypes.func,
-  refPath: PropTypes.string
+  onRemove: PropTypes.func
 }
