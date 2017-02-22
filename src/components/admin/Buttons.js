@@ -5,7 +5,6 @@ import {chain, filter, find, get, isEmpty, trim, some} from 'lodash'
 import u from 'updeep'
 import {Dialog, TextField, RaisedButton, SelectField, MenuItem} from 'material-ui'
 import DataList from './DataList'
-import moment from 'moment'
 import './styles/Buttons.css'
 
 class Buttons extends React.Component {
@@ -36,28 +35,27 @@ class Buttons extends React.Component {
     firebase.database().ref().update(updates)
   }
 
-  _dateString = (data) => {
-    const momentPushed = get(data, 'props.momentPushed')
-    if (!momentPushed) {
-      return '(Never pushed)'
+  _propsString = (data) => {
+    const repeat = get(data, 'props.repeat')
+    if (!repeat) {
+      return ''
     }
 
-    return `(${moment(momentPushed).fromNow()})`
+    return `(every ${repeat.num} ${repeat.unit})`
   }
 
   _renderNewButtonForm = () => {
     return (
-      <form action=''>
+      <form onSubmit={this._addButton} className='valignCenter'>
         <TextField
           className='spaceRight'
-          hintText='Label'
+          floatingLabelText='New button'
           value={this.state.label}
           onChange={(e) => this.setState({label: e.target.value})}
         />
         <RaisedButton
           type='submit'
           label='Add'
-          onClick={this._addButton}
           disabled={!trim(this.state.label) || some(this.props.buttons, ({label}) => label === trim(this.state.label))}
         />
       </form>
@@ -65,11 +63,37 @@ class Buttons extends React.Component {
   }
 
   _showEditDialog = (key) => {
-    this.setState({editKey: key})
+    const button = find(this.props.buttons, button => button.key === key)
+    if (button) {
+      this.setState({
+        editKey: key,
+        repeatNum: get(button, 'props.repeat.num') || '',
+        repeatUnit: get(button, 'props.repeat.unit')
+      })
+    }
   }
 
-  _updateButton = (button, updates) => {
+  _updateButton = () => {
+    const key = this.state.editKey
+    const button = find(this.props.buttons, button => button.key === key)
+    if (!button) {
+      return
+    }
+
+    const updates = {
+      props: {
+        repeat: {
+          num: Number(trim(this.state.repeatNum)),
+          unit: this.state.repeatUnit
+        }
+      }
+    }
     firebase.database().ref('buttons/' + button.key).update(updates)
+    this.setState({
+      editKey: undefined,
+      repeatNum: '',
+      repeatUnit: undefined
+    })
   }
 
   _renderEditDialog = () => {
@@ -83,7 +107,7 @@ class Buttons extends React.Component {
         title={`Edit ${button.label}`}
       >
         Repeats every
-        <form action='' className='valignCenter'>
+        <form className='valignCenter' onSubmit={this._updateButton}>
           <TextField
             type='tel'
             pattern='[0-9]*'
@@ -114,14 +138,7 @@ class Buttons extends React.Component {
             primary
             type='submit'
             label='update'
-            onClick={() => this._updateButton(button, {
-              props: {
-                repeat: {
-                  num: this.state.repeatNum,
-                  unit: this.state.repeatUnit
-                }
-              }
-            })}
+            disabled={Number(trim(this.state.repeatNum)) <= 0 || !this.state.repeatUnit}
           />
         </form>
       </Dialog>
@@ -134,7 +151,7 @@ class Buttons extends React.Component {
         <DataList
           list={this.props.buttons}
           onRemove={this._removeButton}
-          renderText={(data) => `${data.key}: ${data.label} ${this._dateString(data)}`}
+          renderText={(data) => `${data.key}: ${data.label} ${this._propsString(data)}`}
           onClick={this._showEditDialog}
         />
         {this._renderNewButtonForm()}
