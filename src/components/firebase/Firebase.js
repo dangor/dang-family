@@ -14,19 +14,24 @@ const config = {
 }
 
 class Firebase extends React.Component {
-  _handleLogout = () => {
+  _redirectToLogin = () => {
     browserHistory.replace('/login')
   }
 
   componentWillMount () {
     firebase.initializeApp(config)
     firebase.auth().onAuthStateChanged(user => {
-      if (!user) {
-        this._handleLogout()
+      if (user) {
+        this._addListeners()
+      } else {
+        this._removeListeners()
+        this._redirectToLogin()
       }
     })
+  }
 
-    this._addListeners()
+  _removeListeners = () => {
+    firebase.database().ref().off()
   }
 
   _addListeners = () => {
