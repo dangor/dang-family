@@ -46,7 +46,7 @@ class Buttons extends React.Component {
 
   _renderNewButtonForm = () => {
     return (
-      <form onSubmit={this._addButton} className='valignCenter'>
+      <form action='#' onSubmit={this._addButton} className='valignCenter'>
         <TextField
           className='spaceRight'
           floatingLabelText='New button'
@@ -80,15 +80,10 @@ class Buttons extends React.Component {
       return
     }
 
-    const updates = {
-      props: {
-        repeat: {
-          num: Number(trim(this.state.repeatNum)),
-          unit: this.state.repeatUnit
-        }
-      }
-    }
-    firebase.database().ref('buttons/' + button.key).update(updates)
+    firebase.database().ref('buttons/' + button.key + '/props/repeat').set({
+      num: Number(trim(this.state.repeatNum)),
+      unit: this.state.repeatUnit
+    })
     this.setState({
       editKey: undefined,
       repeatNum: '',
@@ -107,7 +102,7 @@ class Buttons extends React.Component {
         title={`Edit ${button.label}`}
       >
         Repeats every
-        <form className='valignCenter' onSubmit={this._updateButton}>
+        <form action='#' className='valignCenter' onSubmit={this._updateButton}>
           <TextField
             type='tel'
             pattern='[0-9]*'

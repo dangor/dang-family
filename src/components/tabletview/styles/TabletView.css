@@ -4,6 +4,22 @@
   justify-content: space-between;
 }
 
-.buttonArea +.buttonArea {
+.tabletButton +.tabletButton {
   margin-top: 1em;
+}
+
+.alignCenter {
+  text-align: center;
+}
+
+.colorGrey {
+  color: grey;
+}
+
+.small {
+  font-size: small;
+}
+
+.spaceTopSmall {
+  margin-top: 0.2em;
 }

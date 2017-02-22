@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
-import {concat, find, get, includes} from 'lodash'
+import {chain, concat, find, get, includes} from 'lodash'
 import {RaisedButton} from 'material-ui'
 import * as firebase from 'firebase'
 import './styles/TabletView.css'
@@ -37,6 +37,59 @@ class TabletView extends React.Component {
     return button.label + ' - ' + (momentPushed ? moment(momentPushed).fromNow() : 'Never pushed')
   }
 
+  _sortedButtons = () => {
+    const pushedAndRepeats = chain(this.props.buttons)
+      .filter(button => get(button, 'props.momentPushed'))
+      .filter(button => get(button, 'props.repeat.num') && get(button, 'props.repeat.unit'))
+      .sortBy(button => moment(get(button, 'props.momentPushed'))
+        .add(get(button, 'props.repeat.num'), get(button, 'props.repeat.unit'))
+        .diff(moment())
+      )
+      .value()
+    const repeats = chain(this.props.buttons)
+      .filter(button => !get(button, 'props.momentPushed'))
+      .filter(button => get(button, 'props.repeat.num') && get(button, 'props.repeat.unit'))
+      .value()
+    const pushedNoRepeat = chain(this.props.buttons)
+      .filter(button => get(button, 'props.momentPushed'))
+      .filter(button => !get(button, 'props.repeat.num') || !get(button, 'props.repeat.unit'))
+      .sortBy(button => moment(get(button, 'props.momentPushed')).diff(moment()))
+      .value()
+    const noRepeat = chain(this.props.buttons)
+      .filter(button => !get(button, 'props.momentPushed'))
+      .filter(button => !get(button, 'props.repeat.num') || !get(button, 'props.repeat.unit'))
+      .value()
+
+    return concat(pushedAndRepeats, repeats, pushedNoRepeat, noRepeat)
+  }
+
+  _repeatText = (button) => {
+    const num = get(button, 'props.repeat.num')
+    const unit = get(button, 'props.repeat.unit')
+    if (num && unit) {
+      return (
+        <div className='alignCenter colorGrey small spaceTopSmall'>
+          {`(every ${num} ${unit})`}
+        </div>
+      )
+    }
+  }
+
+  _primaryOrSecondary = (button) => {
+    const momentPushed = get(button, 'props.momentPushed')
+    if (!momentPushed) {
+      return {}
+    }
+
+    const num = get(button, 'props.repeat.num')
+    const unit = get(button, 'props.repeat.unit')
+    if (num && unit && moment(momentPushed).add(num, unit).isBefore(moment())) {
+      return {secondary: true}
+    }
+
+    return {primary: true}
+  }
+
   render () {
     return (
       <div>
@@ -48,17 +101,15 @@ class TabletView extends React.Component {
           />
         </div>
         <div>
-          {this.props.buttons.map(button => (
-            <div
-              key={button.key}
-              className='buttonArea'
-            >
+          {this._sortedButtons().map(button => (
+            <div key={button.key} className='tabletButton'>
               <RaisedButton
-                primary
-                label={this._buttonLabel(button)}
+                {...this._primaryOrSecondary(button)}
                 fullWidth
+                label={this._buttonLabel(button)}
                 onClick={this._buttonPush(button.key)}
               />
+              {this._repeatText(button)}
             </div>
           ))}
         </div>
