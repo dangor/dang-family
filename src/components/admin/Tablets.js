@@ -16,9 +16,14 @@ class Tablets extends React.Component {
     }
   }
 
-  _addTablet = () => {
+  _addTablet = (e) => {
+    e.preventDefault()
     firebase.database().ref('tablets').push().set({label: trim(this.state.label)})
     this.setState({label: ''})
+  }
+
+  _removeTablet = (key) => {
+    firebase.database().ref('tablets/' + key).remove()
   }
 
   render () {
@@ -28,9 +33,11 @@ class Tablets extends React.Component {
           list={this.props.tablets}
           refPath='tablets'
           renderText={(data) => `${data.key}: ${data.label}`}
+          onRemove={this._removeTablet}
         />
-        <form action='#'>
+        <form className='valignCenter' onSubmit={this._addTablet}>
           <TextField
+            className='spaceRight'
             hintText='Label'
             value={this.state.label}
             onChange={(e) => this.setState({label: e.target.value})}
@@ -38,7 +45,6 @@ class Tablets extends React.Component {
           <RaisedButton
             type='submit'
             label='Add'
-            onClick={this._addTablet}
             disabled={!trim(this.state.label) || some(this.props.tablets, ({label}) => label === trim(this.state.label))}
           />
         </form>

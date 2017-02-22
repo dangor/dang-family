@@ -40,7 +40,7 @@ class Firebase extends React.Component {
       label: data.val().label,
       props: data.val().props
     })
-    const refPaths = ['buttons', 'tablets']
+    const refPaths = ['buttons', 'tablets', 'statuses']
     refPaths.forEach(refPath => {
       const ref = firebase.database().ref(refPath)
       ref.on('child_added', data => {
