@@ -1,16 +1,19 @@
 import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
 import * as firebase from 'firebase'
-import {chain, filter, get, trim, some} from 'lodash'
+import {chain, filter, find, get, isEmpty, trim, some} from 'lodash'
 import u from 'updeep'
-import {Dialog, TextField, RaisedButton} from 'material-ui'
+import {Dialog, TextField, RaisedButton, SelectField, MenuItem} from 'material-ui'
 import DataList from './DataList'
 import moment from 'moment'
+import './styles/Buttons.css'
 
 class Buttons extends React.Component {
   state = {
     label: '',
-    editKey: undefined
+    editKey: undefined,
+    repeatNum: '',
+    repeatUnit: undefined
   }
 
   _addButton = () => {
@@ -44,8 +47,9 @@ class Buttons extends React.Component {
 
   _renderNewButtonForm = () => {
     return (
-      <form action='#'>
+      <form action=''>
         <TextField
+          className='spaceRight'
           hintText='Label'
           value={this.state.label}
           onChange={(e) => this.setState({label: e.target.value})}
@@ -60,17 +64,66 @@ class Buttons extends React.Component {
     )
   }
 
-  _editButton = (key) => {
+  _showEditDialog = (key) => {
     this.setState({editKey: key})
   }
 
-  _renderEditButtonDialog = () => {
+  _updateButton = (button, updates) => {
+    firebase.database().ref('buttons/' + button.key).update(updates)
+  }
+
+  _renderEditDialog = () => {
+    const key = this.state.editKey
+    const button = find(this.props.buttons, button => button.key === key) || {}
+
     return (
       <Dialog
-        open={!!this.state.editKey}
+        open={!!key && !isEmpty(button)}
         onRequestClose={() => this.setState({editKey: undefined})}
+        title={`Edit ${button.label}`}
       >
-        Edit form here
+        Repeats every
+        <form action='' className='valignCenter'>
+          <TextField
+            type='tel'
+            pattern='[0-9]*'
+            className='spaceRight'
+            floatingLabelText='#, e.g. 12'
+            value={this.state.repeatNum}
+            onChange={e => {
+              if (e.target.validity.valid) {
+                this.setState({repeatNum: e.target.value})
+              }
+            }}
+          />
+          <SelectField
+            className='spaceRight'
+            floatingLabelText='Units, e.g. hours'
+            value={this.state.repeatUnit}
+            onChange={(e, i, value) => this.setState({repeatUnit: value})}
+          >
+            {['hours', 'days', 'weeks', 'months'].map((value, i) => (
+              <MenuItem
+                key={i}
+                value={value}
+                primaryText={value}
+              />
+            ))}
+          </SelectField>
+          <RaisedButton
+            primary
+            type='submit'
+            label='update'
+            onClick={() => this._updateButton(button, {
+              props: {
+                repeat: {
+                  num: this.state.repeatNum,
+                  unit: this.state.repeatUnit
+                }
+              }
+            })}
+          />
+        </form>
       </Dialog>
     )
   }
@@ -82,10 +135,10 @@ class Buttons extends React.Component {
           list={this.props.buttons}
           onRemove={this._removeButton}
           renderText={(data) => `${data.key}: ${data.label} ${this._dateString(data)}`}
-          onClick={this._editButton}
+          onClick={this._showEditDialog}
         />
         {this._renderNewButtonForm()}
-        {this._renderEditButtonDialog()}
+        {this._renderEditDialog()}
       </div>
     )
   }

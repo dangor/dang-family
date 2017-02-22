@@ -12,7 +12,10 @@ export default function DataList (props) {
             key={data.key}
             primaryText={props.renderText(data)}
             rightIconButton={
-              <IconButton onClick={() => props.onRemove(data.key)}>
+              <IconButton onClick={(e) => {
+                e.preventDefault()
+                props.onRemove(data.key)
+              }}>
                 <NavigationClose />
               </IconButton>
             }
