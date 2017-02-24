@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
-import {chain, concat, find, get, includes, map} from 'lodash'
+import {chain, concat, find, get, includes, isEqual, map} from 'lodash'
 import {RaisedButton} from 'material-ui'
 import {
   Step,
@@ -14,11 +14,13 @@ import ButtonMenu from './ButtonMenu'
 import moment from 'moment'
 import RadioChecked from 'material-ui/svg-icons/toggle/radio-button-checked'
 import RadioUnchecked from 'material-ui/svg-icons/toggle/radio-button-unchecked'
-import {redA700} from 'material-ui/styles/colors'
+import {redA700, cyan500} from 'material-ui/styles/colors'
 
 class TabletView extends React.Component {
   state = {
-    ticker: 0
+    ticker: 0,
+    buttonPushed: undefined,
+    sliderChanged: undefined
   }
 
   componentDidMount () {
@@ -27,6 +29,12 @@ class TabletView extends React.Component {
 
   componentWillUnmount () {
     clearInterval(this.timer)
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (!isEqual(this.props.buttons, nextProps.buttons) || !isEqual(this.props.statuses, nextProps.statuses)) {
+      this.setState({buttonPushed: undefined, sliderChanged: undefined})
+    }
   }
 
   _buttonToggle = (key) => () => {
@@ -46,6 +54,7 @@ class TabletView extends React.Component {
   }
 
   _buttonPush = (key) => () => {
+    this.setState({buttonPushed: key})
     firebase.database().ref('buttons/' + key + '/props/momentPushed').set(moment().valueOf())
   }
 
@@ -108,6 +117,7 @@ class TabletView extends React.Component {
   }
 
   _statusChange = (status, index) => {
+    this.setState({statusChanged: status.key})
     firebase.database().ref('statuses/' + status.key + '/props/index').set(index)
   }
 
@@ -128,7 +138,13 @@ class TabletView extends React.Component {
             const index = get(status, 'props.index') || 0
             return (
               <div key={i} className='tabletButton'>
-                <Stepper linear={false}>
+                <div className='alignCenter small spaceTopSmall' style={{color: cyan500}}>
+                  {status.label}
+                </div>
+                <Stepper
+                  linear={false}
+                  disabled={this.state.statusChanged === status.key}
+                >
                   {map(get(status, 'props.states'), (state, i) => (
                     <Step key={i}>
                       <StepButton
@@ -152,6 +168,7 @@ class TabletView extends React.Component {
                 fullWidth
                 label={this._buttonLabel(button)}
                 onClick={this._buttonPush(button.key)}
+                disabled={this.state.buttonPushed === button.key}
               />
               {this._repeatText(button)}
             </div>
