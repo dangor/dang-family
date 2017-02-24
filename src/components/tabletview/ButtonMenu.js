@@ -21,6 +21,15 @@ class ButtonMenu extends React.Component {
             checked={includes(this.props.tabletButtons, button.key)}
           />
         ))}
+        {this.props.statuses.map(status => (
+          <MenuItem
+            key={status.key}
+            primaryText={status.label}
+            onClick={this.props.statusToggle(status.key)}
+            insetChildren
+            checked={includes(this.props.tabletStatuses, status.key)}
+          />
+        ))}
       </IconMenu>
     )
   }
@@ -29,9 +38,15 @@ class ButtonMenu extends React.Component {
 ButtonMenu.propTypes = {
   buttons: PropTypes.array,
   buttonToggle: PropTypes.func,
-  tabletButtons: PropTypes.array
+  tabletButtons: PropTypes.array,
+  status: PropTypes.array,
+  statusToggle: PropTypes.func,
+  tabletStatuses: PropTypes.array
 }
 
 export default connect(
-  state => ({buttons: state.firebase.buttons || []})
+  state => ({
+    buttons: state.firebase.buttons || [],
+    statuses: state.firebase.statuses || []
+  })
 )(ButtonMenu)

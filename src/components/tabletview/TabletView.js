@@ -1,11 +1,20 @@
 import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
-import {chain, concat, find, get, includes} from 'lodash'
+import {chain, concat, find, get, includes, map} from 'lodash'
 import {RaisedButton} from 'material-ui'
+import {
+  Step,
+  Stepper,
+  StepButton,
+  StepLabel
+} from 'material-ui/Stepper'
 import * as firebase from 'firebase'
 import './styles/TabletView.css'
 import ButtonMenu from './ButtonMenu'
 import moment from 'moment'
+import RadioChecked from 'material-ui/svg-icons/toggle/radio-button-checked'
+import RadioUnchecked from 'material-ui/svg-icons/toggle/radio-button-unchecked'
+import {redA700} from 'material-ui/styles/colors'
 
 class TabletView extends React.Component {
   state = {
@@ -26,6 +35,14 @@ class TabletView extends React.Component {
       ? tabletButtons.filter(tabletButton => tabletButton !== key)
       : concat(this.props.tabletButtons || [], key)
     firebase.database().ref('tablets/' + this.props.params.key + '/props/buttons').set(update)
+  }
+
+  _statusToggle = (key) => () => {
+    const {tabletStatuses} = this.props
+    const update = includes(tabletStatuses, key)
+      ? tabletStatuses.filter(tabletStatus => tabletStatus !== key)
+      : concat(this.props.tabletStatuses || [], key)
+    firebase.database().ref('tablets/' + this.props.params.key + '/props/statuses').set(update)
   }
 
   _buttonPush = (key) => () => {
@@ -90,17 +107,44 @@ class TabletView extends React.Component {
     return {primary: true}
   }
 
+  _statusChange = (status, index) => {
+    firebase.database().ref('statuses/' + status.key + '/props/index').set(index)
+  }
+
   render () {
     return (
       <div>
         <div className='heading'>
           <h2>{this.props.label}</h2>
           <ButtonMenu
+            statusToggle={this._statusToggle}
+            tabletStatuses={this.props.tabletStatuses}
             buttonToggle={this._buttonToggle}
             tabletButtons={this.props.tabletButtons}
           />
         </div>
         <div>
+          {this.props.statuses.map((status, i) => {
+            const index = get(status, 'props.index') || 0
+            return (
+              <div key={i} className='tabletButton'>
+                <Stepper linear={false}>
+                  {map(get(status, 'props.states'), (state, i) => (
+                    <Step key={i}>
+                      <StepButton
+                        icon={index === i ? <RadioChecked color={redA700} /> : <RadioUnchecked color='grey' />}
+                        onClick={() => this._statusChange(status, i)}
+                      >
+                        <StepLabel style={{fontSize: 24, textTransform: 'uppercase'}}>
+                          {state}
+                        </StepLabel>
+                      </StepButton>
+                    </Step>
+                  ))}
+                </Stepper>
+              </div>
+            )
+          })}
           {this._sortedButtons().map(button => (
             <div key={button.key} className='tabletButton'>
               <RaisedButton
@@ -121,7 +165,9 @@ class TabletView extends React.Component {
 TabletView.propTypes = {
   label: PropTypes.string,
   tabletButtons: PropTypes.array,
-  buttons: PropTypes.array
+  tabletStatuses: PropTypes.array,
+  buttons: PropTypes.array,
+  statuses: PropTypes.array
 }
 
 export default connect(
@@ -129,10 +175,14 @@ export default connect(
     const tablet = find(state.firebase.tablets, ({key}) => key === props.params.key) || {}
     const tabletButtons = get(tablet, 'props.buttons') || []
     const buttons = tabletButtons.map(tabletButton => find(state.firebase.buttons, ({key}) => key === tabletButton) || {}) || []
+    const tabletStatuses = get(tablet, 'props.statuses') || []
+    const statuses = tabletStatuses.map(tabletStatus => find(state.firebase.statuses, ({key}) => key === tabletStatus) || {}) || []
     return {
       label: tablet.label,
       tabletButtons,
-      buttons
+      buttons,
+      tabletStatuses,
+      statuses
     }
   }
 )(TabletView)
