@@ -143,10 +143,12 @@ class TabletView extends React.Component {
                 </div>
                 <Stepper
                   linear={false}
-                  disabled={this.state.statusChanged === status.key}
                 >
                   {map(get(status, 'props.states'), (state, i) => (
-                    <Step key={i}>
+                    <Step
+                      key={i}
+                      disabled={this.state.statusChanged === status.key}
+                    >
                       <StepButton
                         icon={index === i ? <RadioChecked color={redA700} /> : <RadioUnchecked color='grey' />}
                         onClick={() => this._statusChange(status, i)}
