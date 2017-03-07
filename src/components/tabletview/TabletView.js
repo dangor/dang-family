@@ -20,7 +20,7 @@ class TabletView extends React.Component {
   state = {
     ticker: 0,
     buttonPushed: undefined,
-    sliderChanged: undefined
+    statusChanged: undefined
   }
 
   componentDidMount () {
@@ -33,7 +33,7 @@ class TabletView extends React.Component {
 
   componentWillReceiveProps (nextProps) {
     if (!isEqual(this.props.buttons, nextProps.buttons) || !isEqual(this.props.statuses, nextProps.statuses)) {
-      this.setState({buttonPushed: undefined, sliderChanged: undefined})
+      this.setState({buttonPushed: undefined, statusChanged: undefined})
     }
   }
 
