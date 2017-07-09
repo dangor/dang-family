@@ -24,7 +24,7 @@ class TabletView extends React.Component {
   }
 
   componentDidMount () {
-    this.timer = setInterval(() => this.setState({ticker: this.ticker + 1}), 1000)
+    this.timer = setInterval(() => this.setState({ticker: this.ticker + 1}), 10 * 1000)
   }
 
   componentWillUnmount () {
