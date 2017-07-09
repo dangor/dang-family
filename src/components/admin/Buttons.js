@@ -7,6 +7,9 @@ import {Dialog, TextField, RaisedButton, SelectField, MenuItem} from 'material-u
 import DataList from './DataList'
 import './styles/Buttons.css'
 
+/**
+ * Buttons tab in the admin page. Probably should be renamed to indicate that.
+ */
 class Buttons extends React.Component {
   state = {
     label: '',
@@ -148,7 +151,7 @@ class Buttons extends React.Component {
         <DataList
           list={this.props.buttons}
           onRemove={this._removeButton}
-          renderText={(data) => `${data.key}: ${data.label} ${this._propsString(data)}`}
+          renderText={(data) => `${data.label} ${this._propsString(data)}`}
           onClick={this._showEditDialog}
         />
         {this._renderNewButtonForm()}

@@ -136,7 +136,7 @@ class Statuses extends React.Component {
         <DataList
           list={this.props.statuses}
           onRemove={this._removeStatus}
-          renderText={(data) => `${data.key}: ${data.label} ${this._propsString(data)}`}
+          renderText={(data) => `${data.label} ${this._propsString(data)}`}
           onClick={this._showEditDialog}
         />
         {this._renderNewStatusForm()}

@@ -32,7 +32,7 @@ class Tablets extends React.Component {
         <DataList
           list={this.props.tablets}
           refPath='tablets'
-          renderText={(data) => `${data.key}: ${data.label}`}
+          renderText={(data) => `${data.label}`}
           onRemove={this._removeTablet}
         />
         <form className='valignCenter' onSubmit={this._addTablet}>
