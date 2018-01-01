@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Firebase from './components/firebase'
+import AutoReloader from './components/AutoReloader'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import injectTapEventPlugin from 'react-tap-event-plugin'
@@ -21,6 +22,7 @@ export default class App extends Component {
       <MuiThemeProvider muiTheme={muiTheme}>
         <div>
           <Firebase />
+          <AutoReloader />
           {this.props.children}
         </div>
       </MuiThemeProvider>
